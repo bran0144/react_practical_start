@@ -1,23 +1,32 @@
 import logo from './logo.svg';
 import './main-page.css';
+import Header from './header';
+import { useEffect, useMemo, useState } from 'react';
 
 function App() {
+  const userName = "Roland";
+  const [allHouses, setAllHouses] = useState([]);
+  useEffect(() => {
+    const fetchHouses = async () => {
+      const rsp = await fetch("/houses.json");
+      const houses = await rsp.json();
+      setAllHouses(houses);
+    };
+    fetchHouses();
+  }, []);
+
+  const featuredHouse = useMemo(() => {
+    if (allHouses.length) {
+      const randomIndex = Math.floor(Math.random() * allHouses.length);
+      return allHouses[randomIndex];
+    }
+  }, [allHouses]);
+ 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code>.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='container'>
+      <Header subtitle={userName}
+        title="Some title"
+      />
     </div>
   );
 }
